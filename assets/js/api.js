@@ -1,6 +1,6 @@
 var Api = (function(){
    
-    const baseUrl = 'http://www.omdbapi.com/';
+    const baseUrl = 'https://www.omdbapi.com/';
 
     function get(url,params){
         url = appendApiKey(url)
