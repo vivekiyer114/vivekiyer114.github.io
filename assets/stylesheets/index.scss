@@ -75,8 +75,18 @@ body{
             .sort-input-wrapper{
                 margin-right: 20px;
                 letter-spacing: 1px;
+                
                 span:first-child{
                     padding: 0;
+                }
+                span.sort-handler{
+                    cursor: pointer;
+                    &:hover{
+                        color:$yellow;
+                    }
+                }
+                span.sort-handler.active{
+                    color: $yellow;
                 }
                 span{
                     text-align: center;

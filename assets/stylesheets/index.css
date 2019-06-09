@@ -64,6 +64,12 @@ body {
         letter-spacing: 1px; }
         .app .header .form-wrapper .sort-input-wrapper span:first-child {
           padding: 0; }
+        .app .header .form-wrapper .sort-input-wrapper span.sort-handler {
+          cursor: pointer; }
+          .app .header .form-wrapper .sort-input-wrapper span.sort-handler:hover {
+            color: #f5c646; }
+        .app .header .form-wrapper .sort-input-wrapper span.sort-handler.active {
+          color: #f5c646; }
         .app .header .form-wrapper .sort-input-wrapper span {
           text-align: center;
           display: inline-block;

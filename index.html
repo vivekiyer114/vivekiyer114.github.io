@@ -19,16 +19,16 @@
             <div class="header">
                 <div class="navigation">
                     <ul>
-                        <li onclick="setActiveTab(this)" data-type="global" class="active" >Find Movies</li>
-                        <li onclick="setActiveTab(this)" data-type="personal" >My Movies</li>
+                        <li data-type="global" class="active" >Find Movies</li>
+                        <li data-type="personal" >My Movies</li>
                     </ul>
                 </div>
                 <div class="form-wrapper" >
                      <form>
                          <div class="sort-input-wrapper">
                              <span>Sort By :</span>
-                             <span>Title</span>
-                             <span>Rating</span>
+                             <span class="sort-handler" data-type="title" >Title</span>
+                             <span class="sort-handler" data-type="year" >Year</span>
                          </div>
                          <div class="search-input-wrapper">
                             <img src="https://i.ibb.co/x6FQqQM/musica-searcher.png" alt="">
