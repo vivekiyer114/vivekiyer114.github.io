@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Movie Search</title>
+    
+
+    <link rel="stylesheet" href="assets/stylesheets/index.css" type="text/css"  >
+</head>
+<body>
+    <div class="app" >
+        <header>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/6/69/IMDB_Logo_2016.svg" alt="">
+        </header>
+
+        <div class="movie-search">
+            <div class="header">
+                <div class="navigation">
+                    <ul>
+                        <li onclick="setActiveTab(this)" data-type="global" class="active" >Find Movies</li>
+                        <li onclick="setActiveTab(this)" data-type="personal" >My Movies</li>
+                    </ul>
+                </div>
+                <div class="form-wrapper" >
+                     <form>
+                         <div class="sort-input-wrapper">
+                             <span>Sort By :</span>
+                             <span>Title</span>
+                             <span>Rating</span>
+                         </div>
+                         <div class="search-input-wrapper">
+                            <img src="https://i.ibb.co/x6FQqQM/musica-searcher.png" alt="">
+                            <input class="title-search" type="text" placeholder="Search By Movie Title"   >
+                         </div>
+                     </form>
+                </div>
+            </div>
+            
+            <div class="list-wrapper" >
+                
+            </div>
+        </div>
+    </div>
+
+</body>
+
+<script src="assets/js/api.js"></script>
+<script src="assets/js/index.js"></script>
+</html>
