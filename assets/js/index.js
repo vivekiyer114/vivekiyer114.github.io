@@ -5,7 +5,8 @@ var MovieApp = (function(){
     }
 
     function listenToSearchInput(){
-        // prevent form submit as well
+        var formEl = document.getElementsByTagName('form')[0];
+        formEl.onsubmit = (e) => e.preventDefault(); 
 
         var searchEl = document.getElementsByClassName('title-search')[0];
         searchEl.addEventListener('keyup',function(e){
