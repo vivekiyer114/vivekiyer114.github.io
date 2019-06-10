@@ -107,7 +107,7 @@ var MovieApp = (function(){
                 currentEl.setAttribute('class','')
             }
         }
-
+        console.log(type)
         if (type === 'personal'){
             renderMovieList(myMovieData)
         }else{
@@ -131,12 +131,19 @@ var MovieApp = (function(){
         search = search || 'live';
         Api.get('?s='+search)
         .then(data => data.Search)
+        .then(saveMovieList)
         .then(renderMovieList)
     }
 
+    function saveMovieList(movieList){
+        return new Promise((resolve,reject) => {
+            movieData = movieList;
+            resolve(movieList)
+        })
+    }
+    
     function renderMovieList(movieList){
         if (!movieList)return;
-        movieData = movieList;  // Store the list globally
 
 
         
