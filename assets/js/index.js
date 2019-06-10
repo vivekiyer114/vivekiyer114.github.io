@@ -1,11 +1,32 @@
 var MovieApp = (function(){
     var movieData;
-
+    var myMovieData = localStorage.getItem('myMovieData') ? JSON.parse(localStorage.getItem('myMovieData')) : [];
+    var myMovieDataIds = myMovieData.map(m => m.imdbID);
+    
     function init(){
         fetchMovieList();
         listenToSearchInput();
         listenToSortInput();
         listenToTabClick();
+        
+    }
+
+    function listenToAdd(){
+        var movieItems = document.querySelectorAll('.movie-item');
+        const L = movieItems.length;
+        for (var c = 0; c < L ; c++){
+            var currAddEl = movieItems[c].getElementsByTagName('button')[0] ;
+            currAddEl.addEventListener('click',addToMyMovies);
+        }
+    }
+    
+    function addToMyMovies(e){
+        var id = e.target.attributes['data-movie-id'].value;
+        var movie = movieData.filter(m => m.imdbID === id)[0];
+        myMovieData.push(movie);
+        localStorage.setItem('myMovieData',JSON.stringify(myMovieData));
+        e.target.innerHTML = 'Added'
+        e.target.setAttribute('disabled',true)
     }
 
     function listenToSortInput(){
@@ -86,6 +107,12 @@ var MovieApp = (function(){
                 currentEl.setAttribute('class','')
             }
         }
+
+        if (type === 'personal'){
+            renderMovieList(myMovieData)
+        }else{
+            renderMovieList(movieData)
+        }
     }
 
     
@@ -111,14 +138,22 @@ var MovieApp = (function(){
         if (!movieList)return;
         movieData = movieList;  // Store the list globally
 
+
+        
+
         var movieListContainer = document.getElementsByClassName('list-wrapper')[0];
         var listEls = '';
         for (var c = 0; c < movieList.length ; c++){
             var currentMovie = movieList[c];
             fetchPoster(currentMovie.Poster,c);
 
+            const movieExist = myMovieDataIds.indexOf(currentMovie.imdbID) >= 0;
             var movieItem = `
-                <div style="background-image:url('https://m.media-amazon.com/images/G/01/imdb/images/nopicture/medium/film-3385785534._CB483791896_.png')" class='movie-item' >
+                <div class='movie-item' >
+                    <img src='https://m.media-amazon.com/images/G/01/imdb/images/nopicture/medium/film-3385785534._CB483791896_.png' />
+                    <div class="cta-wrapper" >
+                        <button data-movie-id='${currentMovie.imdbID}' ${movieExist ? 'disabled' : ''} id='add' >${movieExist ? 'Added' : 'Add'}</button>
+                    </div>
                     <div class="content-wrapper" >
                         <div class="title" >${currentMovie.Title}</div>
                         <div class="year" >${currentMovie.Year}</div>
@@ -129,6 +164,7 @@ var MovieApp = (function(){
             listEls += movieItem
         }
         movieListContainer.innerHTML = listEls;
+        listenToAdd();
     }
 
     function fetchPoster(poster,index){
@@ -137,9 +173,8 @@ var MovieApp = (function(){
         fetch(poster)
         .then(resp => {
             var posterToLoad = resp.status === 200 ? poster : dummyPoster
-            var imgEl = document.getElementsByClassName('movie-item')[index];
-            imgEl.style.backgroundImage = "url('"+posterToLoad+"')";
-            imgEl.classList.add('noimage')
+            var imgEl = document.querySelectorAll('.movie-item img')[index];
+            imgEl.src = posterToLoad;
         })
     }
 

@@ -133,15 +133,14 @@ body{
         width: 100%;
         justify-content: center;
         .movie-item{
-            flex-basis: calc(20% - 20px);
-            background-size: 100%;
-            background-repeat: no-repeat;
-            background-position: center;
-            height: 300px;
             margin: 10px 10px;
             transition: all 0.5s ease;
             position: relative;
             z-index: 0;
+            flex-basis: calc(20% - 20px);
+            img{
+                max-width: 100%;
+            }
             &:hover{
                 transform:scale(1.3);
                 z-index: 1;
@@ -150,6 +149,34 @@ body{
                     opacity: 1;
                     border: 1px solid white;
                 }
+                .cta-wrapper{
+                    display: block;
+                    width: 100%;
+                    height: 100%;
+                    background-color: rgba(0,0,0,0.4);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    button{
+                        background-color: rgba($yellow,0.7);
+                        color: black;
+                        border: none;
+                        border-radius: 4px;
+                        padding: 8px 20px;
+                        font-size: 16px;
+                        cursor: pointer;
+                        transition: ease 0.2s;
+                        &:hover{
+                            background-color: rgba($yellow,1);
+                        }
+                    }
+                }
+            }
+            .cta-wrapper{
+                display: none;
             }
             .content-wrapper{
                 opacity: 0.5;
@@ -167,5 +194,44 @@ body{
                 
             }
         }
+    }
+
+
+    @media (max-width:400px){
+        .header{
+            flex-direction: column;
+
+            .navigation{
+                width: 100%;
+                ul{
+                    display: flex;
+                    align-items: center;
+                    width: 100%;
+                }
+                li{
+                    width: auto !important;
+                    text-align: center;
+                    flex-basis: 50%;
+                    transition-duration: 0.2s !important;
+                }
+            }
+            .form-wrapper{
+                form{
+                    flex-direction: column;
+                    > div{
+                        margin-bottom: 20px;
+                    }
+                }
+            }
+            
+        }
+        .movie-search{
+            max-width: none;
+        }
+        .list-wrapper{
+                .movie-item{
+                    flex-basis: calc(50% - 20px) !important;
+                }
+            }
     }
 }
