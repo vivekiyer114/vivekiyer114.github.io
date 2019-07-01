@@ -1,32 +1,38 @@
 var MovieApp = (function(){
-    var movieData;
+    var movieData,activeTab = 'global';
     var myMovieData = localStorage.getItem('myMovieData') ? JSON.parse(localStorage.getItem('myMovieData')) : [];
-    var myMovieDataIds = myMovieData.map(m => m.imdbID);
-    
+
     function init(){
         fetchMovieList();
         listenToSearchInput();
         listenToSortInput();
         listenToTabClick();
-        
     }
 
-    function listenToAdd(){
+    function listenToCTA(){
         var movieItems = document.querySelectorAll('.movie-item');
         const L = movieItems.length;
         for (var c = 0; c < L ; c++){
             var currAddEl = movieItems[c].getElementsByTagName('button')[0] ;
-            currAddEl.addEventListener('click',addToMyMovies);
+            currAddEl.addEventListener('click',ctaClick);
         }
     }
     
-    function addToMyMovies(e){
+    function ctaClick(e){
         var id = e.target.attributes['data-movie-id'].value;
-        var movie = movieData.filter(m => m.imdbID === id)[0];
-        myMovieData.push(movie);
-        localStorage.setItem('myMovieData',JSON.stringify(myMovieData));
-        e.target.innerHTML = 'Added'
-        e.target.setAttribute('disabled',true)
+        
+        if (activeTab === 'personal'){
+            myMovieData = myMovieData.filter(m => m.imdbID !== id);
+            localStorage.setItem('myMovieData',JSON.stringify(myMovieData));
+            renderMovieList(myMovieData)
+        }else{
+            var movie = movieData.filter(m => m.imdbID === id)[0];
+            myMovieData.push(movie);
+            localStorage.setItem('myMovieData',JSON.stringify(myMovieData));
+            e.target.innerHTML = 'Added'
+            e.target.setAttribute('disabled',true)
+
+        }
     }
 
     function listenToSortInput(){
@@ -45,15 +51,17 @@ var MovieApp = (function(){
         
         var sortFunction = sortType === 'title' ? sortByTitle : sortByYear;
 
+        let dataToSort = activeTab === 'personal' ? myMovieData : movieData;
+        
         if (classes.contains('active')){
             el.classList.remove('active');
-            movieData = movieData.reverse()
+            dataToSort = dataToSort.reverse()
         }else{
             el.classList.add('active');
-            movieData = movieData.sort((a,b) => sortFunction(a,b,"ascending"))
+            dataToSort = dataToSort.sort((a,b) => sortFunction(a,b,"ascending"))
         }
 
-        renderMovieList(movieData)
+        renderMovieList(dataToSort)
     }
 
     function sortByYear(a,b,order){
@@ -107,7 +115,8 @@ var MovieApp = (function(){
                 currentEl.setAttribute('class','')
             }
         }
-        console.log(type)
+
+        activeTab = type;
         if (type === 'personal'){
             renderMovieList(myMovieData)
         }else{
@@ -122,9 +131,23 @@ var MovieApp = (function(){
 
         var searchEl = document.getElementsByClassName('title-search')[0];
         searchEl.addEventListener('keyup',function(e){
-            var searchText = e.target.value;
-            fetchMovieList(searchText)
+            var searchText = e.target.value.toLowerCase();
+            if (activeTab === 'personal'){
+                searchFilterMovieList(searchText)
+            }else{
+                fetchMovieList(searchText)
+            }
         })
+    }
+
+    function searchFilterMovieList(searchText){
+        console.log(searchText)
+        if (searchText){
+            myMovieData = myMovieData.filter(movie => movie.Title.toLowerCase().indexOf(searchText) >= 0);
+        }else{
+            myMovieData = JSON.parse(localStorage.getItem('myMovieData'))
+        }
+        renderMovieList(myMovieData)
     }
 
     function fetchMovieList(search){
@@ -153,13 +176,16 @@ var MovieApp = (function(){
         for (var c = 0; c < movieList.length ; c++){
             var currentMovie = movieList[c];
             fetchPoster(currentMovie.Poster,c);
-
+            
+            var myMovieDataIds = myMovieData.map(m => m.imdbID);
             const movieExist = myMovieDataIds.indexOf(currentMovie.imdbID) >= 0;
             var movieItem = `
                 <div class='movie-item' >
                     <img src='https://m.media-amazon.com/images/G/01/imdb/images/nopicture/medium/film-3385785534._CB483791896_.png' />
                     <div class="cta-wrapper" >
-                        <button data-movie-id='${currentMovie.imdbID}' ${movieExist ? 'disabled' : ''} id='add' >${movieExist ? 'Added' : 'Add'}</button>
+                        <button data-movie-id='${currentMovie.imdbID}' ${movieExist && activeTab === 'global' ? 'disabled' : ''} id='cta' >
+                            ${activeTab === 'personal' ? (!movieExist ? 'Removed' : 'Remove') : (movieExist ? 'Added' : 'Add')}
+                        </button>
                     </div>
                     <div class="content-wrapper" >
                         <div class="title" >${currentMovie.Title}</div>
@@ -171,7 +197,7 @@ var MovieApp = (function(){
             listEls += movieItem
         }
         movieListContainer.innerHTML = listEls;
-        listenToAdd();
+        listenToCTA();
     }
 
     function fetchPoster(poster,index){

@@ -17,6 +17,9 @@ body {
   background-color: black;
   font-weight: lighter; }
 
+button:disabled {
+  cursor: default !important; }
+
 .app {
   padding-top: 20px;
   padding-bottom: 50px; }
